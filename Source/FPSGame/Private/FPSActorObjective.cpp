@@ -2,6 +2,8 @@
 
 
 #include "FPSActorObjective.h"
+
+#include "FPSCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -42,8 +44,14 @@ void AFPSActorObjective::Tick(float DeltaTime)
 void AFPSActorObjective::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-
-	PlayEffects();
+	
+	AFPSCharacter* FpsCharacter = Cast<AFPSCharacter>(OtherActor);
+	if(FpsCharacter)
+	{
+		PlayEffects();
+		FpsCharacter->bIScarryingObjective = true;
+		Destroy();
+	}
 }
 
 void AFPSActorObjective::PlayEffects()
