@@ -18,6 +18,11 @@ public:
 	void CompleteMission(APawn* InstigatorPawn);
 	UFUNCTION(BlueprintImplementableEvent, Category = Functions)
 	void OnMissionCompletion(APawn* InstigatorPawn);
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = SubClass)
+	TSubclassOf<AActor> SpectatingActorClass;
 };
 
 
