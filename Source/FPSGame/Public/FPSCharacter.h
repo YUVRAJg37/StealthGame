@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlackHole.h"
 #include "GameFramework/Character.h"
 #include "FPSCharacter.generated.h"
 
@@ -33,12 +34,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Mesh")
+	USceneComponent* BlackHoleSpawnLocation;
+
 public:
 	AFPSCharacter();
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category="Projectile")
 	TSubclassOf<AFPSProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Projectile")
+	TSubclassOf<ABlackHole> BlackHoleClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditDefaultsOnly, Category="Gameplay")

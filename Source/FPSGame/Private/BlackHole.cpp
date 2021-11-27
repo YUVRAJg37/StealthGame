@@ -15,9 +15,12 @@ Strength(1.0f)
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("BlackHole Mesh");
 	SphereComponent = CreateDefaultSubobject<USphereComponent>("Sphere Component");
+	CollisionComponent = CreateDefaultSubobject<USphereComponent>("Collision Component");
+	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("Projectile Movement");
 
 	RootComponent = MeshComponent;
 	SphereComponent->SetupAttachment(MeshComponent);
+	CollisionComponent->SetupAttachment(MeshComponent);
 }
 
 // Called when the game starts or when spawned
@@ -25,7 +28,8 @@ void ABlackHole::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MeshComponent->OnComponentBeginOverlap.AddDynamic(this, &ABlackHole::OnBeginOverlap);
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ABlackHole::OnBeginOverlap);
+	
 }
 
 // Called every frame
@@ -34,6 +38,9 @@ void ABlackHole::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Attract();
+
+	SetActorRotation(FRotator(0,100,0));
+
 }
 
 void ABlackHole::Attract()
@@ -52,12 +59,13 @@ void ABlackHole::Attract()
 void ABlackHole::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(OtherActor)
+	if(OtherActor && OtherActor!=this && OtherComp->IsSimulatingPhysics())
 	{
 		if(DestroyFX)
 		{
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyFX, OtherActor->GetActorLocation());
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyFX, OtherActor->GetActorLocation(), OtherActor->GetActorRotation());
 		}
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *OtherActor->GetName());
 		OtherActor->Destroy();
 	}
 }

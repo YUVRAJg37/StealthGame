@@ -28,6 +28,9 @@ bIScarryingObjective(false)
 	GunMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	GunMeshComponent->CastShadow = false;
 	GunMeshComponent->SetupAttachment(Mesh1PComponent, "GripPoint");
+
+	BlackHoleSpawnLocation = CreateDefaultSubobject<USceneComponent>("Black Hole Location");
+	BlackHoleSpawnLocation->SetupAttachment(GunMeshComponent);
 }
 
 
@@ -52,15 +55,15 @@ void AFPSCharacter::Fire()
 	// try and fire a projectile
 	if (ProjectileClass)
 	{
-		FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
-		FRotator MuzzleRotation = GunMeshComponent->GetSocketRotation("Muzzle");
+		FVector MuzzleLocation = BlackHoleSpawnLocation->GetComponentLocation();
+		FRotator MuzzleRotation = BlackHoleSpawnLocation->GetComponentRotation();
 
 		//Set Spawn Collision Handling Override
 		FActorSpawnParameters ActorSpawnParams;
-		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+		// ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 		// spawn the projectile at the muzzle
-		GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		GetWorld()->SpawnActor<ABlackHole>(BlackHoleClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
 	}
 
 	// try and play the sound if specified
