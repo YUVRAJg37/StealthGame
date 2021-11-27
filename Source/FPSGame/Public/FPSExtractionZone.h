@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
+#include "Sound/SoundCue.h"
 #include "FPSExtractionZone.generated.h"
 
 UCLASS()
@@ -27,6 +28,8 @@ protected:
 	UBoxComponent* OverlapComp;
 	UPROPERTY(EditDefaultsOnly, Category = Components)
 	UDecalComponent* DecalComponent;
+	UPROPERTY(EditDefaultsOnly, Category = Sounds)
+	USoundCue* MissionFailureSound;
 
 public:	
 	// Called every frame

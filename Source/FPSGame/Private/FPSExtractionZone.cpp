@@ -2,7 +2,11 @@
 
 
 #include "FPSExtractionZone.h"
+
+#include "FPSCharacter.h"
+#include "FPSGameMode.h"
 #include "Components/DecalComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFPSExtractionZone::AFPSExtractionZone()
@@ -42,6 +46,23 @@ void AFPSExtractionZone::Tick(float DeltaTime)
 void AFPSExtractionZone::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapping"));
+	AFPSCharacter* PlayerCharacter = Cast<AFPSCharacter>(OtherActor);
+
+	if(PlayerCharacter && PlayerCharacter->bIScarryingObjective)
+	{
+		AFPSGameMode* GameMode = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
+		if(GameMode)
+		{
+			GameMode->CompleteMission(PlayerCharacter);
+		}
+	}
+	else
+	{
+		if(MissionFailureSound)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), MissionFailureSound);
+		}
+	}
+
 }
 
