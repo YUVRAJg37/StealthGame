@@ -22,6 +22,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	void Attract();
+	void Scale(float DeltaTime);
+	void TEMP();
 	
 public:	
 	// Called every frame
@@ -48,7 +50,11 @@ private:
 	UParticleSystem* DestroyFX;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovementComponent;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	float InterpSpeed;
 
+	FVector FinalScale;
+	FVector StartingScale;
+	
 };
 

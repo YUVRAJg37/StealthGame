@@ -5,10 +5,12 @@
 
 #include "Kismet/GameplayStatics.h"
 
+
 // Sets default values
 ABlackHole::ABlackHole() :
 Radius(1.0f),
-Strength(1.0f)
+Strength(1.0f),
+InterpSpeed(10.0f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -29,7 +31,8 @@ void ABlackHole::BeginPlay()
 	Super::BeginPlay();
 
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ABlackHole::OnBeginOverlap);
-	
+	FinalScale = GetActorTransform().GetScale3D();
+	SetActorScale3D(FVector(0));
 }
 
 // Called every frame
@@ -41,6 +44,7 @@ void ABlackHole::Tick(float DeltaTime)
 
 	SetActorRotation(FRotator(0,100,0));
 
+	Scale(DeltaTime);
 }
 
 void ABlackHole::Attract()
@@ -57,7 +61,7 @@ void ABlackHole::Attract()
 }
 
 void ABlackHole::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor && OtherActor!=this && OtherComp->IsSimulatingPhysics())
 	{
@@ -65,9 +69,15 @@ void ABlackHole::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor
 		{
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyFX, OtherActor->GetActorLocation(), OtherActor->GetActorRotation());
 		}
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *OtherActor->GetName());
 		OtherActor->Destroy();
 	}
 }
 
+void ABlackHole::Scale(float DeltaTime)
+{
+	
+	FVector ScaleFactor = FMath::VInterpTo(GetActorScale(), FinalScale, DeltaTime, InterpSpeed);
+
+	SetActorScale3D(ScaleFactor);
+}
 
