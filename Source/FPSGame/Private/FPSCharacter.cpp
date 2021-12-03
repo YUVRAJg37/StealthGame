@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/PawnNoiseEmitterComponent.h"
 
 
 AFPSCharacter::AFPSCharacter() :
@@ -28,6 +29,8 @@ bIScarryingObjective(false)
 	GunMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	GunMeshComponent->CastShadow = false;
 	GunMeshComponent->SetupAttachment(Mesh1PComponent, "GripPoint");
+
+	PawnNoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>("Pawn Noise Emitter Component");
 }
 
 
@@ -57,6 +60,7 @@ void AFPSCharacter::Fire()
 
 		//Set Spawn Collision Handling Override
 		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.Instigator = this;
 		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 		// spawn the projectile at the muzzle
@@ -99,4 +103,6 @@ void AFPSCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+
+	UE_LOG(LogTemp, Warning , TEXT("ji"));
 }

@@ -16,12 +16,12 @@ AFPSGameMode::AFPSGameMode()
 	HUDClass = AFPSHUD::StaticClass();
 }
 
-void AFPSGameMode::CompleteMission(APawn* InstigatorPawn)
+void AFPSGameMode::CompleteMission(APawn* InstigatorPawn, bool bMissionComplete)
 {
 	if(InstigatorPawn)
 	{
 		InstigatorPawn->DisableInput(nullptr);
-		OnMissionCompletion(InstigatorPawn);
+		OnMissionCompletion(InstigatorPawn, bMissionComplete);
 
 		TArray<AActor*> SpectatingViewTargetArray;
 		
